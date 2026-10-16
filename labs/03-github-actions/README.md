@@ -30,7 +30,7 @@ The offline copy is the same deck: open it from your clone if the link doesn't l
 - Completed [Lab 02](../02-branching-and-prs/)
 - Passed the [preflight](../../preflight/)
 - Docker (with the Compose V2 plugin); about 1.5 GB RAM for the single gateway
-- Python 3.10 to 3.13 (for the linters: `ign-lint`, `yamllint`)
+- [`uv`](https://docs.astral.sh/uv/) to create the linters' Python 3.12 venv (the same version CI uses; uv downloads it if needed)
 - The [GitHub CLI](https://cli.github.com/) (`gh`), authenticated (`gh auth status`)
 
 > **WSL2 (Windows): keep the clone in your Linux home (`~/…`), never `/mnt/c/…`.**

@@ -164,10 +164,16 @@ git config --global user.email "you@example.com"
 
 Use the email attached to your GitHub account so commits are attributed to you on GitHub.
 
-## "python3 … is too old" or "cannot create a virtual environment"
+## "python3 … is too old", "uv not found" or "cannot create a virtual environment"
 
-Lab 02–07 scripts use `python3`, and Lab 03 installs its linters (`ign-lint`, `yamllint`) into a
-virtual environment; `ign-lint` needs Python 3.10+.
+Lab 02–07 scripts use `python3` (3.10+). Lab 03 installs its linters (`ign-lint`, `yamllint`) into a
+Python 3.12 virtual environment, the same Python version CI uses, created with `uv`. ign-lint
+doesn't support Python 3.14 yet (Ubuntu 26.04's `python3`), so `uv` downloads 3.12 when needed.
+
+- **Install uv on Ubuntu / WSL:** `curl -LsSf https://astral.sh/uv/install.sh | sh`, then open a new terminal.
+- **Install uv on macOS:** `brew install uv`.
+- **"uv cannot create a Python 3.12 venv":** uv downloads Python once; check your internet
+  connection and run `uv python install 3.12`.
 
 - **Ubuntu / WSL:** the venv module is a separate package — `sudo apt install python3-venv`.
   Ubuntu 22.04+ ships Python 3.10+; on 20.04, `sudo apt install python3.11 python3.11-venv`.

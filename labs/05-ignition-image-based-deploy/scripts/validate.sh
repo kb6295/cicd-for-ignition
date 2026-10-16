@@ -134,7 +134,7 @@ run_optional() {
 }
 
 repo_root="$(git -C "$PROJECT_ROOT" rev-parse --show-toplevel 2>/dev/null || echo "$PROJECT_ROOT/../..")"
-run_optional "yamllint" yamllint "pip install yamllint" \
+run_optional "yamllint" yamllint "uv pip install yamllint" \
   yamllint -c .yamllint.yml . "$repo_root"/.github/workflows/lab05-*.yml
 run_optional "shellcheck (scripts/*.sh)" shellcheck "install shellcheck from your package manager" \
   shellcheck -x scripts/*.sh
@@ -145,7 +145,7 @@ lab_rel="${PROJECT_ROOT#"$repo_root"/}"
 ign_lint_views() {
   (cd "$repo_root" && ign-lint --config "$lab_rel/rule_config.json" --files "$lab_rel/projects/**/view.json")
 }
-run_optional "ign-lint (Perspective views)" ign-lint "pip install ign-lint==0.6.1" \
+run_optional "ign-lint (Perspective views)" ign-lint "uv pip install ign-lint==0.6.1" \
   ign_lint_views
 run_optional "docker compose config" docker "install Docker with Compose v2" \
   docker compose config -q

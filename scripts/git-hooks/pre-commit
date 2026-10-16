@@ -31,7 +31,7 @@ for lab_dir in "$top"/labs/*/; do
         if command -v pre-commit >/dev/null 2>&1; then
             pre-commit run --config "$lab/.pre-commit-config.yaml" || status=1
         else
-            echo "pre-commit is not installed: skipping $lab linters (pip install pre-commit)"
+            echo "pre-commit is not installed: skipping $lab linters (uv pip install pre-commit in your Lab 03 venv)"
         fi
     fi
 done

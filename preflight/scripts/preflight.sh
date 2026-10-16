@@ -599,6 +599,23 @@ else
   log_missing "$REQUIRED" "python3 not found" "Ubuntu/WSL: sudo apt install python3 python3-venv. macOS: brew install python"
 fi
 
+# Lab 03 runs its linters in a Python 3.12 venv, the same version as CI.
+# ign-lint doesn't support 3.14 (Ubuntu 26.04's python3), so uv creates the
+# venv and downloads Python 3.12 when the machine has none. Doing it here also
+# caches that Python before Day 1.
+UV_FIX="macOS: brew install uv. Ubuntu/WSL: curl -LsSf https://astral.sh/uv/install.sh | sh, then open a new terminal"
+if command -v uv >/dev/null 2>&1; then
+  VENV_TMP="$(mktemp -d 2>/dev/null || echo "${TMPDIR:-/tmp}/preflight-uv-$$")"
+  if uv venv --quiet --python 3.12 "$VENV_TMP/venv" >/dev/null 2>&1 && [ -x "$VENV_TMP/venv/bin/python" ]; then
+    log_pass "uv $(uv --version 2>/dev/null | awk '{print $2}') can create a Python 3.12 venv (Lab 03 linters, same Python as CI)"
+  else
+    log_missing "$REQUIRED" "uv cannot create a Python 3.12 venv" "Check your internet connection (uv downloads Python 3.12 once), then run: uv python install 3.12"
+  fi
+  rm -rf "$VENV_TMP"
+else
+  log_missing "$REQUIRED" "uv not found (Lab 03 creates its Python 3.12 venv with it)" "$UV_FIX"
+fi
+
 # --- Docker (required) -----------------------------------------------------
 section "Docker"
 if command -v docker >/dev/null 2>&1; then

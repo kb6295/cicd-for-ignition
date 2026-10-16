@@ -593,20 +593,17 @@ scripts/teardown.sh     <span class="cm"># stops it again</span></pre></div>
 <!-- SETUP 2 · LINTERS -->
 <section class="slide">
   <header class="topbar"><img class="logo" src="logos/OriginalDark.png" alt="Mustry Solutions"></header>
-  <div class="sechead"><span class="num warm">SETUP · 2</span><h2 class="title">Install the linters, pinned, in a Python 3.10+ venv</h2></div>
+  <div class="sechead"><span class="num warm">SETUP · 2</span><h2 class="title">Install the linters, pinned, in a Python 3.12 venv</h2></div>
   <div class="body">
-    <div class="code"><div class="code-title">macOS</div><pre><span class="cm"># Apple's python3 is 3.9: install 3.12 alongside the linters</span>
-brew install shellcheck actionlint python@3.12
-python3.12 -m venv .venv &amp;&amp; source .venv/bin/activate
-pip install yamllint==1.35.1 ign-lint==0.6.1
-python -V                    <span class="cm"># 3.10 to 3.13</span></pre></div>
+    <div class="code"><div class="code-title">macOS</div><pre>brew install shellcheck actionlint uv</pre></div>
     <div class="code"><div class="code-title">Debian / Ubuntu / WSL</div><pre><span class="cm"># actionlint has no apt package: grab the release binary</span>
-sudo apt install shellcheck python3-venv
+sudo apt install shellcheck
 bash &lt;(curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
 sudo mv actionlint /usr/local/bin/
-python3 -m venv .venv &amp;&amp; source .venv/bin/activate
-pip install yamllint==1.35.1 ign-lint==0.6.1
-python -V                    <span class="cm"># 3.10 to 3.13</span></pre></div>
+curl -LsSf https://astral.sh/uv/install.sh | sh   <span class="cm"># then open a new terminal</span></pre></div>
+    <div class="code"><div class="code-title">Both: uv downloads Python 3.12 if you don't have it</div><pre>uv venv --python 3.12 .venv &amp;&amp; source .venv/bin/activate
+uv pip install yamllint==1.35.1 ign-lint==0.6.1
+python -V                    <span class="cm"># Python 3.12.x, same as CI</span></pre></div>
   </div>
 </section>
 
@@ -785,7 +782,7 @@ gh pr close ci/first-run --delete-branch   <span class="cm"># close it unmerged<
           ign-lint --config labs/03-github-actions/rule_config.json
           --files <span class="cmd2">"labs/03-github-actions/projects/**/view.json"</span></pre></div>
       <ul class="checks sm">
-        <li><b>Same pins as your venv</b>, on Python <code>"3.12"</code>: ign-lint needs 3.10+.</li>
+        <li><b>Same pins and the same Python <code>"3.12"</code> as your venv.</b></li>
         <li><b>actionlint is a <code>uses:</code> step:</b> it isn't installed on <code>ubuntu-latest</code>, so <code>run: actionlint</code> fails with <i>command not found</i>. <code>uses:</code> steps ignore <code>working-directory</code>.</li>
         <li><b>A step-level <code>working-directory: .</code></b> overrides the default for that step only: ign-lint runs from the repo root.</li>
         <li><b><code>timeout-minutes</code> on every job:</b> a hung job otherwise bills for up to 6 hours. Too tight and a slow apt mirror flakes the check.</li>
@@ -1028,12 +1025,12 @@ docker rm -f lab03-runner</pre></div>
   <div class="body">
     <div class="work">
       <ol class="steps alt">
-        <li><b>Install the tool:</b> <code>pip install pre-commit</code>. No <code>pre-commit install</code>: <code>scripts/setup.sh</code> already set <code>core.hooksPath</code>.</li>
+        <li><b>Install the tool</b> in your venv: <code>uv pip install pre-commit</code>. No <code>pre-commit install</code>: <code>scripts/setup.sh</code> already set <code>core.hooksPath</code>.</li>
         <li><b>Baseline run</b> over the whole lab: clean after Part 1.</li>
         <li><b>Set the Clock binding to <code>now(250)</code></b>, try to commit, and watch the <b>ign-lint hook refuse the commit</b>.</li>
         <li><b>Undo the bad change.</b> Commit went through anyway? Check <code>pre-commit --version</code> (venv active) and that <code>git config core.hooksPath</code> prints <code>scripts/git-hooks</code>; if not, re-run <code>scripts/setup.sh</code>.</li>
       </ol>
-      <div class="code"><pre>pip install pre-commit
+      <div class="code"><pre>uv pip install pre-commit
 git config core.hooksPath     <span class="cm"># → scripts/git-hooks</span>
 pre-commit run --all-files --config .pre-commit-config.yaml
 

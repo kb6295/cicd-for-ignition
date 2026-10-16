@@ -39,7 +39,7 @@ as the team agrees*, and check the config in so the agreement is enforced.
 embedded inside them, **without a running gateway**.
 
 - **PyPI package:** `ign-lint` (v0.6.1, pinned)
-- **Install:** `pip install ign-lint==0.6.1` (needs Python 3.10 to 3.13)
+- **Install:** `uv pip install ign-lint==0.6.1` in the Python 3.12 venv (the lab and CI run it on Python 3.12)
 - **Run (from the repo root):** `ign-lint --config labs/03-github-actions/rule_config.json --files "labs/03-github-actions/projects/**/view.json"`
 - **Repo:** <https://github.com/bw-design-group/ignition-lint>
 - **Docs:** <https://bw-design-group.github.io/ignition-lint>

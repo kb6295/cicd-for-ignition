@@ -104,7 +104,7 @@ check_pre_commit() {
     if ! command -v pre-commit >/dev/null 2>&1; then
         echo -e "${YELLOW}pre-commit is not installed, so resource.json churn will NOT be${NC}"
         echo -e "${YELLOW}reverted automatically and the linters CI runs stay local-only:${NC}"
-        echo "  pip install pre-commit"
+        echo "  uv pip install pre-commit"
         echo ""
     fi
 }

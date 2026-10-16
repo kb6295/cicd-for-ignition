@@ -58,7 +58,8 @@ Every check is one of two tiers:
 | `curl` installed | Required |
 | `jq` and `openssl` installed | Recommended |
 | Clock within 5 minutes of GitHub's (WSL2 drifts after hibernate) | Required |
-| `python3` ≥ 3.10 that can create a venv with pip (Lab 03 linters) | Required |
+| `python3` ≥ 3.10 that can create a venv with pip (lab scripts) | Required |
+| `uv` that can create a Python 3.12 venv (Lab 03 linters, same Python as CI) | Required |
 | `docker` ≥ 24, daemon running, and `docker compose` v2 | Required |
 | Memory available to Docker ≥ 8 GB (labs 04–06 run three gateways + DB + runner) | Recommended |
 | CPUs available to Docker ≥ 4 | Recommended |

@@ -13,7 +13,7 @@
 # Runs when the tool is installed, the `lint` job (skipped with a hint
 # otherwise; CI always runs them):
 #   5. ign-lint on every Perspective view.json, with rule_config.json (run
-#      from the repo root, like CI; pip install ign-lint==0.6.1).
+#      from the repo root, like CI; uv pip install ign-lint==0.6.1).
 #   6. yamllint, shellcheck and actionlint, as in CI.
 #   7. docker compose config -q.
 #
@@ -155,7 +155,7 @@ if command -v ign-lint > /dev/null 2>&1; then
     rc=1
   fi
 else
-  echo -e "  ${YELLOW}skipped${NC}: ign-lint not installed (CI runs it; pip install ign-lint==0.6.1)"
+  echo -e "  ${YELLOW}skipped${NC}: ign-lint not installed (CI runs it; uv pip install ign-lint==0.6.1 in your Lab 03 venv)"
 fi
 
 # 6. yamllint + shellcheck (optional) -----------------------------------------
@@ -167,7 +167,7 @@ if command -v yamllint > /dev/null 2>&1; then
     rc=1
   fi
 else
-  echo -e "  ${YELLOW}skipped${NC}: yamllint not installed (CI runs it; pip install yamllint==1.35.1)"
+  echo -e "  ${YELLOW}skipped${NC}: yamllint not installed (CI runs it; uv pip install yamllint==1.35.1 in your Lab 03 venv)"
 fi
 echo "→ shellcheck (scripts/*.sh)"
 if command -v shellcheck > /dev/null 2>&1; then

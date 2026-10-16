@@ -822,8 +822,8 @@
       <div class="how">Set <span class="mono">user.name</span> / <span class="mono">user.email</span>, and leave <span class="mono">core.autocrlf</span> off (or <span class="mono">input</span>) — CRLF checkouts break the lab scripts. <a href="https://git-scm.com/">git-scm.com</a></div>
     </div>
     <div class="req-row">
-      <div class="tool">Python<span class="v">≥ 3.10</span></div>
-      <div class="how">Needed for the lab scripts and linters. Must create a venv with pip: on Ubuntu/WSL install <span class="mono">python3</span> and <span class="mono">python3-venv</span>; on macOS, <span class="mono">brew install python</span>.</div>
+      <div class="tool">Python<span class="v">3.12</span></div>
+      <div class="how">The lab scripts need <span class="mono">python3</span> with venv; the linters run on 3.12 like CI, in a venv made by <span class="mono">uv</span>, which downloads 3.12 for you. Ubuntu/WSL: <span class="mono">sudo apt install python3-venv</span> and <span class="mono">curl -LsSf https://astral.sh/uv/install.sh | sh</span>; macOS: <span class="mono">brew install python uv</span>.</div>
     </div>
     <div class="req-row">
       <div class="tool">A GitHub account</div>
