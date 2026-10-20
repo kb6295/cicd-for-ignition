@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 # Every `run:` step starts in the lab folder, so the commands are the same ones
-# you run locally from labs/03-github-actions. `uses:` steps are not covered:
+# you run locally from labs/03-github-actions. `uses:` steps are not covered:hbef
 # they still see the repo root (see actionlint below).
 defaults:
   run:
