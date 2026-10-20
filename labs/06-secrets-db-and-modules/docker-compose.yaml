@@ -37,7 +37,6 @@
 # services (the DB service also because db-init/ reads the reporting file on a
 # fresh volume; the gateway because its secret provider resolves them). That
 # edit is the exercise, so this file ships WITHOUT it.
-
 ---
 # `name:` pins the Compose project so this stack always resolves to THESE
 # containers and volumes, whichever directory you run compose from. Without it
@@ -56,21 +55,7 @@ x-ignition-env: &ignition-env
   # Skip the Quick Start prompt on first login — the lab ships its own projects.
   DISABLE_QUICKSTART: "true"
   GATEWAY_MODULES_ENABLED: >-
-    com.inductiveautomation.alarm-notification,
-    com.inductiveautomation.eventstream,
-    com.inductiveautomation.historian,
-    com.inductiveautomation.connectors.kafka,
-    com.inductiveautomation.opcua.drivers.modbus,
-    com.inductiveautomation.opcua,
-    com.inductiveautomation.perspective,
-    com.inductiveautomation.reporting,
-    com.inductiveautomation.historian.sql,
-    com.inductiveautomation.symbol-factory,
-    com.inductiveautomation.opcua.drivers.tcpudp,
-    com.inductiveautomation.webdev,
-    com.inductiveautomation.jdbc.postgresql,
-    dev.bwdesigngroup.flint.FlintDesignerBridge,
-    project-scan-endpoint
+    com.inductiveautomation.alarm-notification, com.inductiveautomation.eventstream, com.inductiveautomation.historian, com.inductiveautomation.connectors.kafka, com.inductiveautomation.opcua.drivers.modbus, com.inductiveautomation.opcua, com.inductiveautomation.perspective, com.inductiveautomation.reporting, com.inductiveautomation.historian.sql, com.inductiveautomation.symbol-factory, com.inductiveautomation.opcua.drivers.tcpudp, com.inductiveautomation.webdev, com.inductiveautomation.jdbc.postgresql, dev.bwdesigngroup.flint.FlintDesignerBridge, project-scan-endpoint
   # Embr-Periscope, Embr-Charts and the TimescaleDB Historian are the three
   # spare modules Part 3 installs. Their .modl files sit in
   # third-party-modules/, but they ship with NO services/modules.json entry
@@ -84,11 +69,9 @@ x-ignition-env: &ignition-env
   # so image-based/fresh gateways accept them from config alone. That
   # derivation is the whole point of Part 3.
   ACCEPT_MODULE_LICENSES: >-
-    dev.bwdesigngroup.flint.FlintDesignerBridge,
-    project-scan-endpoint
+    dev.bwdesigngroup.flint.FlintDesignerBridge, project-scan-endpoint
   ACCEPT_MODULE_CERTS: >-
-    dev.bwdesigngroup.flint.FlintDesignerBridge,
-    project-scan-endpoint
+    dev.bwdesigngroup.flint.FlintDesignerBridge, project-scan-endpoint
   GATEWAY_RESTORE_DISABLED: "true"
   GATEWAY_NETWORK_ENABLED: "true"
   TZ: "Europe/Brussels"
@@ -98,8 +81,7 @@ x-ignition-env: &ignition-env
 # read-only — so despite group_add + setgid the student cannot edit or
 # delete those files (and teardown.sh --volumes fails on them). With 0002
 # they land 664/775, group-owned by the student via the setgid dirs.
-x-ignition-entrypoint: &ignition-entrypoint
-  ["/bin/sh", "-c", 'umask 0002 && exec docker-entrypoint.sh "$@"', "--"]
+x-ignition-entrypoint: &ignition-entrypoint [ "/bin/sh", "-c", 'umask 0002 && exec docker-entrypoint.sh "$@"', "--" ]
 
 x-ignition-resources: &ignition-resources
   deploy:
@@ -117,15 +99,22 @@ x-ignition-resources: &ignition-resources
       max-file: "3"
 
 x-ignition-healthcheck: &ignition-healthcheck
-  test: ["CMD", "curl", "-fsS", "http://localhost:8088/StatusPing"]
+  test: [ "CMD", "curl", "-fsS", "http://localhost:8088/StatusPing" ]
   interval: 30s
   timeout: 10s
   retries: 10
   start_period: 90s
 
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  reporting_password:
+    file: ./secrets/reporting_password.txt
+
 services:
   # --- local gateway: edits on the host show up here immediately --------------
   gateway-local-development:
+    secrets: [postgres_password, reporting_password]
     image: inductiveautomation/ignition:8.3.8
     container_name: lab06-gateway-local-development
     hostname: lab06-gateway-local-development
@@ -163,13 +152,7 @@ services:
       # the warm-up's whole point. This passphrase unlocks the root key.
       IGNITION_ROOT_KEY_PASSWORD: "${IGNITION_ROOT_KEY_PASSWORD:-lab06-root-key-pass}"
     command: >
-      -n lab06-local
-      -m 1024
-      --
-      wrapper.java.initmemory=256
-      -Dignition.allowunsignedmodules=true
-      -Dignition.gateway.externalModulesFolder=/third-party-modules
-      -Dignition.config.mode=local-development
+      -n lab06-local -m 1024 -- wrapper.java.initmemory=256 -Dignition.allowunsignedmodules=true -Dignition.gateway.externalModulesFolder=/third-party-modules -Dignition.config.mode=local-development
     healthcheck: *ignition-healthcheck
     <<: *ignition-resources
     networks:
@@ -219,13 +202,7 @@ services:
       GATEWAY_ADMIN_USERNAME: "${GATEWAY_ADMIN_USERNAME_TEST:-admin}"
       GATEWAY_ADMIN_PASSWORD: "${GATEWAY_ADMIN_PASSWORD_TEST:-password}"
     command: >
-      -n lab06-test
-      -m 1024
-      --
-      wrapper.java.initmemory=256
-      -Dignition.allowunsignedmodules=true
-      -Dignition.gateway.externalModulesFolder=/third-party-modules
-      -Dignition.config.mode=test
+      -n lab06-test -m 1024 -- wrapper.java.initmemory=256 -Dignition.allowunsignedmodules=true -Dignition.gateway.externalModulesFolder=/third-party-modules -Dignition.config.mode=test
     healthcheck: *ignition-healthcheck
     <<: *ignition-resources
     networks:
@@ -269,13 +246,7 @@ services:
       GATEWAY_ADMIN_USERNAME: "${GATEWAY_ADMIN_USERNAME_PRODUCTION:-admin}"
       GATEWAY_ADMIN_PASSWORD: "${GATEWAY_ADMIN_PASSWORD_PRODUCTION:-password}"
     command: >
-      -n lab06-production
-      -m 1024
-      --
-      wrapper.java.initmemory=256
-      -Dignition.allowunsignedmodules=true
-      -Dignition.gateway.externalModulesFolder=/third-party-modules
-      -Dignition.config.mode=production
+      -n lab06-production -m 1024 -- wrapper.java.initmemory=256 -Dignition.allowunsignedmodules=true -Dignition.gateway.externalModulesFolder=/third-party-modules -Dignition.config.mode=production
     healthcheck: *ignition-healthcheck
     <<: *ignition-resources
     networks:
@@ -308,13 +279,14 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+    secrets: [ postgres_password, reporting_password ]
     environment:
       POSTGRES_USER: "${POSTGRES_USER:-ignition}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-lab06-postgres-pw}"
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       POSTGRES_DB: ignition_local_development
-      REPORTING_PASSWORD: "${REPORTING_PASSWORD:-lab06-reporting-pw}"
+      REPORTING_PASSWORD_FILE: /run/secrets/reporting_password
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ignition}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ignition}" ]
       interval: 5s
       timeout: 3s
       retries: 10
