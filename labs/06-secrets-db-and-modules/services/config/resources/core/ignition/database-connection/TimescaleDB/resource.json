@@ -1,6 +1,6 @@
 {
   "scope": "A",
-  "description": "Connection to local TimescaleDB",
+  "description": "Connection to local TimescaleDB!",
   "version": 1,
   "restricted": false,
   "overridable": true,
@@ -10,10 +10,10 @@
   "attributes": {
     "lastModification": {
       "actor": "admin",
-      "timestamp": "2026-10-20T12:59:05Z"
+      "timestamp": "2026-10-20T13:11:35Z"
     },
     "uuid": "13e0ab48-1a42-4f7e-b679-318df38c1587",
-    "lastModificationSignature": "fa7948da4170cb99ad18c8a87c9af2a6485f7151f0d99ada5b4697cb37ac263e",
+    "lastModificationSignature": "7eac8d8343666d46cec4913b5b1eb2f2b77154e273f26312e9e4bcddd781b975",
     "enabled": true
   }
 }
